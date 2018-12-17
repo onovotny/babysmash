@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Deployment.Application;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -23,7 +22,7 @@ namespace BabySmash
 {
     using System.Globalization;
     using System.IO;
-    using System.Speech.Synthesis;
+   // using System.Speech.Synthesis;
     using System.Text;
 
     using Newtonsoft.Json;
@@ -40,13 +39,13 @@ namespace BabySmash
 
         public bool isOptionsDialogShown { get; set; }
         private bool isDrawing = false;
-        private readonly SpeechSynthesizer objSpeech = new SpeechSynthesizer();
+        //private readonly SpeechSynthesizer objSpeech = new SpeechSynthesizer();
         private readonly List<MainWindow> windows = new List<MainWindow>();
 
         private DispatcherTimer timer = new DispatcherTimer();
         private Queue<Shape> ellipsesQueue = new Queue<Shape>();
         private Dictionary<string, List<UserControl>> figuresUserControlQueue = new Dictionary<string, List<UserControl>>();
-        private ApplicationDeployment deployment = null;
+
         private WordFinder wordFinder = new WordFinder("Words.txt");
 
         /// <summary>Prevents a default instance of the Controller class from being created.</summary>
@@ -57,43 +56,43 @@ namespace BabySmash
             get { return instance; }
         }
 
-        void deployment_CheckForUpdateCompleted(object sender, CheckForUpdateCompletedEventArgs e)
-        {
-            if (e.Error == null && e.UpdateAvailable)
-            {
-                try
-                {
-                    MainWindow w = this.windows[0];
-                    w.updateProgress.Value = 0;
-                    w.UpdateAvailableLabel.Visibility = Visibility.Visible;
+        //void deployment_CheckForUpdateCompleted(object sender, CheckForUpdateCompletedEventArgs e)
+        //{
+        //    if (e.Error == null && e.UpdateAvailable)
+        //    {
+        //        try
+        //        {
+        //            MainWindow w = this.windows[0];
+        //            w.updateProgress.Value = 0;
+        //            w.UpdateAvailableLabel.Visibility = Visibility.Visible;
 
-                    deployment.UpdateAsync();
-                }
-                catch (InvalidOperationException ex)
-                {
-                    Debug.WriteLine(ex.ToString());
-                    MainWindow w = this.windows[0];
-                    w.UpdateAvailableLabel.Visibility = Visibility.Hidden;
-                }
-            }
-        }
+        //            deployment.UpdateAsync();
+        //        }
+        //        catch (InvalidOperationException ex)
+        //        {
+        //            Debug.WriteLine(ex.ToString());
+        //            MainWindow w = this.windows[0];
+        //            w.UpdateAvailableLabel.Visibility = Visibility.Hidden;
+        //        }
+        //    }
+        //}
 
-        void deployment_UpdateProgressChanged(object sender, DeploymentProgressChangedEventArgs e)
-        {
-            MainWindow w = this.windows[0];
-            w.updateProgress.Value = e.ProgressPercentage;
-        }
+        //void deployment_UpdateProgressChanged(object sender, DeploymentProgressChangedEventArgs e)
+        //{
+        //    MainWindow w = this.windows[0];
+        //    w.updateProgress.Value = e.ProgressPercentage;
+        //}
 
-        void deployment_UpdateCompleted(object sender, AsyncCompletedEventArgs e)
-        {
-            if (e.Error != null)
-            {
-                Debug.WriteLine(e.ToString());
-                return;
-            }
-            MainWindow w = this.windows[0];
-            w.UpdateAvailableLabel.Visibility = Visibility.Hidden;
-        }
+        //void deployment_UpdateCompleted(object sender, AsyncCompletedEventArgs e)
+        //{
+        //    if (e.Error != null)
+        //    {
+        //        Debug.WriteLine(e.ToString());
+        //        return;
+        //    }
+        //    MainWindow w = this.windows[0];
+        //    w.UpdateAvailableLabel.Visibility = Visibility.Hidden;
+        //}
 
         public void Launch()
         {
@@ -101,21 +100,21 @@ namespace BabySmash
             timer.Interval = new TimeSpan(0, 0, 1);
             int Number = 0;
 
-            if (ApplicationDeployment.IsNetworkDeployed)
-            {
-                deployment = ApplicationDeployment.CurrentDeployment;
-                deployment.UpdateCompleted += new System.ComponentModel.AsyncCompletedEventHandler(deployment_UpdateCompleted);
-                deployment.UpdateProgressChanged += deployment_UpdateProgressChanged;
-                deployment.CheckForUpdateCompleted += deployment_CheckForUpdateCompleted;
-                try
-                {
-                    deployment.CheckForUpdateAsync();
-                }
-                catch (InvalidOperationException e)
-                {
-                    Debug.WriteLine(e.ToString());
-                }
-            }
+            //if (ApplicationDeployment.IsNetworkDeployed)
+            //{
+            //    deployment = ApplicationDeployment.CurrentDeployment;
+            //    deployment.UpdateCompleted += new System.ComponentModel.AsyncCompletedEventHandler(deployment_UpdateCompleted);
+            //    deployment.UpdateProgressChanged += deployment_UpdateProgressChanged;
+            //    deployment.CheckForUpdateCompleted += deployment_CheckForUpdateCompleted;
+            //    try
+            //    {
+            //        deployment.CheckForUpdateAsync();
+            //    }
+            //    catch (InvalidOperationException e)
+            //    {
+            //        Debug.WriteLine(e.ToString());
+            //    }
+            //}
 
             foreach (WinForms.Screen s in WinForms.Screen.AllScreens)
             {
@@ -152,14 +151,14 @@ namespace BabySmash
             string[] args = Environment.GetCommandLineArgs();
             string ext = System.IO.Path.GetExtension(System.Reflection.Assembly.GetExecutingAssembly().CodeBase);
 
-            if (ApplicationDeployment.IsNetworkDeployed && (ApplicationDeployment.CurrentDeployment.IsFirstRun || ApplicationDeployment.CurrentDeployment.UpdatedVersion != ApplicationDeployment.CurrentDeployment.CurrentVersion))
-            {
-                //if someone made us a screensaver, then don't show the options dialog.
-                if ((args != null && args[0] != "/s") && String.CompareOrdinal(ext, ".SCR") != 0)
-                {
-                    ShowOptionsDialog();
-                }
-            }
+            //if (ApplicationDeployment.IsNetworkDeployed && (ApplicationDeployment.CurrentDeployment.IsFirstRun || ApplicationDeployment.CurrentDeployment.UpdatedVersion != ApplicationDeployment.CurrentDeployment.CurrentVersion))
+            //{
+            //    //if someone made us a screensaver, then don't show the options dialog.
+            //    if ((args != null && args[0] != "/s") && String.CompareOrdinal(ext, ".SCR") != 0)
+            //    {
+            //        ShowOptionsDialog();
+            //    }
+            //}
 #if !false
             timer.Start();
 #endif
@@ -391,17 +390,17 @@ namespace BabySmash
             {
                 PlayLaughter();
             }
-            if (objSpeech != null && Settings.Default.Sounds == "Speech")
-            {
-                if (template.Letter != null && template.Letter.Length == 1 && Char.IsLetterOrDigit(template.Letter[0]))
-                {
-                    SpeakString(template.Letter);
-                }
-                else
-                {
-                    SpeakString(GetLocalizedString(Utils.ColorToString(template.Color)) + " " + template.Name);
-                }
-            }
+            //if (objSpeech != null && Settings.Default.Sounds == "Speech")
+            //{
+            //    if (template.Letter != null && template.Letter.Length == 1 && Char.IsLetterOrDigit(template.Letter[0]))
+            //    {
+            //        SpeakString(template.Letter);
+            //    }
+            //    else
+            //    {
+            //        SpeakString(GetLocalizedString(Utils.ColorToString(template.Color)) + " " + template.Name);
+            //    }
+            //}
         }
 
         /// <summary>
@@ -446,62 +445,62 @@ namespace BabySmash
 
         private void SpeakString(string s)
         {
-            ThreadedSpeak ts = new ThreadedSpeak(s);
-            ts.Speak();
+            //ThreadedSpeak ts = new ThreadedSpeak(s);
+            //ts.Speak();
         }
 
-        private class ThreadedSpeak
-        {
-            private string Word = null;
-            SpeechSynthesizer SpeechSynth = new SpeechSynthesizer();
-            public ThreadedSpeak(string Word)
-            {
-                this.Word = Word;
-                CultureInfo keyboardLanguage = System.Windows.Forms.InputLanguage.CurrentInputLanguage.Culture;
-                InstalledVoice neededVoice = this.SpeechSynth.GetInstalledVoices(keyboardLanguage).FirstOrDefault();
-                if (neededVoice == null)
-                {
-                    //http://superuser.com/questions/590779/how-to-install-more-voices-to-windows-speech
-                    //https://msdn.microsoft.com/en-us/library/windows.media.speechsynthesis.speechsynthesizer.voice.aspx
-                    //http://stackoverflow.com/questions/34776593/speechsynthesizer-selectvoice-fails-with-no-matching-voice-is-installed-or-th
-                    this.Word = "Unsupported Language";
-                }
-                else if (!neededVoice.Enabled)
-                {
-                    this.Word = "Voice Disabled";
-                }
-                else
-                {
-                    try
-                    {
-                        this.SpeechSynth.SelectVoice(neededVoice.VoiceInfo.Name);
-                    }
-                    catch (Exception ex)
-                    {
-                        Debug.Assert(false, ex.ToString());
-                    }
-                }
+        //private class ThreadedSpeak
+        //{
+        //    private string Word = null;
+        //    SpeechSynthesizer SpeechSynth = new SpeechSynthesizer();
+        //    public ThreadedSpeak(string Word)
+        //    {
+        //        this.Word = Word;
+        //        CultureInfo keyboardLanguage = System.Windows.Forms.InputLanguage.CurrentInputLanguage.Culture;
+        //        InstalledVoice neededVoice = this.SpeechSynth.GetInstalledVoices(keyboardLanguage).FirstOrDefault();
+        //        if (neededVoice == null)
+        //        {
+        //            //http://superuser.com/questions/590779/how-to-install-more-voices-to-windows-speech
+        //            //https://msdn.microsoft.com/en-us/library/windows.media.speechsynthesis.speechsynthesizer.voice.aspx
+        //            //http://stackoverflow.com/questions/34776593/speechsynthesizer-selectvoice-fails-with-no-matching-voice-is-installed-or-th
+        //            this.Word = "Unsupported Language";
+        //        }
+        //        else if (!neededVoice.Enabled)
+        //        {
+        //            this.Word = "Voice Disabled";
+        //        }
+        //        else
+        //        {
+        //            try
+        //            {
+        //                this.SpeechSynth.SelectVoice(neededVoice.VoiceInfo.Name);
+        //            }
+        //            catch (Exception ex)
+        //            {
+        //                Debug.Assert(false, ex.ToString());
+        //            }
+        //        }
 
-                SpeechSynth.Rate = -1;
-                SpeechSynth.Volume = 100;
-            }
-            public void Speak()
-            {
-                Thread oThread = new Thread(new ThreadStart(this.Start));
-                oThread.Start();
-            }
-            private void Start()
-            {
-                try
-                {
-                    SpeechSynth.Speak(Word);
-                }
-                catch (Exception e)
-                {
-                    System.Diagnostics.Trace.WriteLine(e.ToString());
-                }
-            }
-        }
+        //        SpeechSynth.Rate = -1;
+        //        SpeechSynth.Volume = 100;
+        //    }
+        //    public void Speak()
+        //    {
+        //        Thread oThread = new Thread(new ThreadStart(this.Start));
+        //        oThread.Start();
+        //    }
+        //    private void Start()
+        //    {
+        //        try
+        //        {
+        //            SpeechSynth.Speak(Word);
+        //        }
+        //        catch (Exception e)
+        //        {
+        //            System.Diagnostics.Trace.WriteLine(e.ToString());
+        //        }
+        //    }
+        //}
 
         public void ShowOptionsDialog()
         {

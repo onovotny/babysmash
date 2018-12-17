@@ -2,16 +2,16 @@
 using System.Runtime.InteropServices;
 using System.Windows;
 
-[assembly: AssemblyTitle("BabySmash")]
-[assembly: AssemblyDescription("")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Scott Hanselman")]
-[assembly: AssemblyProduct("BabySmash")]
-[assembly: AssemblyCopyright("Copyright ©2008 Scott Hanselman")]
-[assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]
-[assembly: ComVisible(false)]
-[assembly: AssemblyVersion("1.0.2.0")]
+//[assembly: AssemblyTitle("BabySmash")]
+//[assembly: AssemblyDescription("")]
+//[assembly: AssemblyConfiguration("")]
+//[assembly: AssemblyCompany("Scott Hanselman")]
+//[assembly: AssemblyProduct("BabySmash")]
+//[assembly: AssemblyCopyright("Copyright ©2008 Scott Hanselman")]
+//[assembly: AssemblyTrademark("")]
+//[assembly: AssemblyCulture("")]
+//[assembly: ComVisible(false)]
+//[assembly: AssemblyVersion("1.0.2.0")]
 
 //In order to begin building localizable applications, set 
 //<UICulture>CultureYouAreCodingWith</UICulture> in your .csproj file
